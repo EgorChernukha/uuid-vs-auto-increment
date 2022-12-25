@@ -12,6 +12,7 @@ use VUdaltsov\UuidVsAutoIncrement\AutoIncrementBenchmark\AutoIncrementBenchmark;
 use VUdaltsov\UuidVsAutoIncrement\Benchmark\Benchmarks;
 use VUdaltsov\UuidVsAutoIncrement\Database\Databases;
 use VUdaltsov\UuidVsAutoIncrement\Postgres\PostgresDatabase;
+use VUdaltsov\UuidVsAutoIncrement\MySQL\MySQLDatabase;
 use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidBenchmark;
 use VUdaltsov\UuidVsAutoIncrement\Writer\Csv;
 use function Ramsey\Uuid\v1;
@@ -43,6 +44,7 @@ $benchmarks = new Benchmarks([
 
 $databases = new Databases([
     'postgres' => static fn (): PostgresDatabase => new PostgresDatabase(),
+    'mysql' => static fn (): MySQLDatabase => new MySQLDatabase(),
 ]);
 
 $application = new Application();

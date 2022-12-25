@@ -17,6 +17,7 @@
     "require": {
         "php": "^8.1",
         "ext-pgsql": "*",
+        "ext-pdo": "*",
         "ramsey/uuid": "^4.6",
         "symfony/console": "^6.1"
     },
