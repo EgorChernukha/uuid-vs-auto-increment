@@ -17,7 +17,7 @@ final class MySQLUuidTable implements UuidTable
             <<<'SQL'
                 drop table if exists uuid;
                 create table uuid (
-                    id VARCHAR(36) not null,
+                    id BINARY(16) not null,
                     PRIMARY KEY (id)
                 )
                 SQL,
@@ -27,7 +27,7 @@ final class MySQLUuidTable implements UuidTable
     public function measureInsertExecutionTime(array $uuids): TimePeriod
     {
         $values = implode(',', array_map(
-            static fn (string $uuid): string => "('{$uuid}')",
+            static fn (string $uuid): string => "(UUID_TO_BIN('{$uuid}'))",
             $uuids,
         ));
 
