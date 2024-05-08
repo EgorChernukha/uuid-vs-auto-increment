@@ -13,7 +13,7 @@ services:
             - postgres:/var/lib/postgresql/data:cached
 
     mysql:
-        image: harbor.ispring.lan/vendor/percona-server:8.0.29-21-ispring7
+        image: percona:ps-8.0.36-28
         environment:
             - MYSQL_DATABASE=benchmark
             - MYSQL_ROOT_PASSWORD=root

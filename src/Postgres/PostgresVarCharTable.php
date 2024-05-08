@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace VUdaltsov\UuidVsAutoIncrement\MySQL;
+namespace VUdaltsov\UuidVsAutoIncrement\Postgres;
 
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\Memory;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\TimePeriod;
 use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidTable;
+use VUdaltsov\UuidVsAutoIncrement\VarBinaryBenchmark\VarBinaryTable;
+use VUdaltsov\UuidVsAutoIncrement\VarCharBenchmark\VarCharTable;
 
-final class MySQLUuidTable implements UuidTable
+final class PostgresVarCharTable implements VarCharTable
 {
     public function __construct(
-        private readonly MySQLDatabase $database,
+        private readonly PostgresDatabase $database,
     ) {
         $this->database->execute(
             <<<'SQL'
-                drop table if exists uuid;
-                create table uuid (
-                    id BINARY(16) not null,
-                    PRIMARY KEY (id)
+                drop table if exists vch;
+                create table vch (
+                    id text not null primary key
                 )
                 SQL,
         );
@@ -27,13 +28,13 @@ final class MySQLUuidTable implements UuidTable
     public function measureInsertExecutionTime(array $uuids): TimePeriod
     {
         $values = implode(',', array_map(
-            static fn (string $uuid): string => "(UUID_TO_BIN('{$uuid}'))",
+            static fn (string $uuid): string => "('{$uuid}')",
             $uuids,
         ));
 
         return $this->database->measureExecutionTime(
             <<<SQL
-                insert into uuid (id)
+                insert into vch (id)
                 values {$values}
                 SQL,
         );
@@ -48,8 +49,8 @@ final class MySQLUuidTable implements UuidTable
 
         return $this->database->measureExecutionTime(
             <<<SQL
-                select BIN_TO_UUID(id)
-                from uuid
+                select id
+                from vch
                 where id in ({$inValue})
                 SQL,
         );
@@ -57,6 +58,6 @@ final class MySQLUuidTable implements UuidTable
 
     public function measureIndexSize(): Memory
     {
-        return $this->database->measureIndexesSize('uuid');
+        return $this->database->measureIndexesSize('vch');
     }
 }

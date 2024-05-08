@@ -10,6 +10,8 @@ use VUdaltsov\UuidVsAutoIncrement\Database\Table;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\Memory;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\TimePeriod;
 use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidTable;
+use VUdaltsov\UuidVsAutoIncrement\VarBinaryBenchmark\VarBinaryTable;
+use VUdaltsov\UuidVsAutoIncrement\VarCharBenchmark\VarCharTable;
 
 final class MySQLDatabase implements Database
 {
@@ -43,6 +45,8 @@ final class MySQLDatabase implements Database
         return match ($class) {
             AutoIncrementTable::class => new MySQLAutoIncrementTable($this),
             UuidTable::class => new MySQLUuidTable($this),
+            VarBinaryTable::class => new MySQLVarBinaryTable($this),
+            VarCharTable::class => new MySQLVarCharTable($this),
             default => null,
         };
     }

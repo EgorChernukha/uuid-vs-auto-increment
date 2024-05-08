@@ -12,6 +12,8 @@ use VUdaltsov\UuidVsAutoIncrement\Database\Table;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\Memory;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\TimePeriod;
 use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidTable;
+use VUdaltsov\UuidVsAutoIncrement\VarBinaryBenchmark\VarBinaryTable;
+use VUdaltsov\UuidVsAutoIncrement\VarCharBenchmark\VarCharTable;
 
 final class PostgresDatabase implements Database
 {
@@ -45,6 +47,8 @@ final class PostgresDatabase implements Database
         return match ($class) {
             AutoIncrementTable::class => new PostgresAutoIncrementTable($this),
             UuidTable::class => new PostgresUuidTable($this),
+            VarBinaryTable::class => new PostgresVarBinaryTable($this),
+            VarCharTable::class => new PostgresVarCharTable($this),
             default => null,
         };
     }

@@ -1,55 +1,54 @@
 <?php
-
 declare(strict_types=1);
 
 namespace VUdaltsov\UuidVsAutoIncrement\MySQL;
 
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\Memory;
 use VUdaltsov\UuidVsAutoIncrement\Stopwatch\TimePeriod;
-use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidTable;
+use VUdaltsov\UuidVsAutoIncrement\VarBinaryBenchmark\VarBinaryTable;
 
-final class MySQLUuidTable implements UuidTable
+final class MySQLVarBinaryTable implements VarBinaryTable
 {
     public function __construct(
         private readonly MySQLDatabase $database,
     ) {
         $this->database->execute(
             <<<'SQL'
-                drop table if exists uuid;
-                create table uuid (
-                    id BINARY(16) not null,
+                drop table if exists vb;
+                create table vb (
+                    id VARBINARY(63) not null,
                     PRIMARY KEY (id)
                 )
                 SQL,
         );
     }
 
-    public function measureInsertExecutionTime(array $uuids): TimePeriod
+    public function measureInsertExecutionTime(array $ids): TimePeriod
     {
         $values = implode(',', array_map(
-            static fn (string $uuid): string => "(UUID_TO_BIN('{$uuid}'))",
-            $uuids,
+            static fn (string $id): string => "('{$id}')",
+            $ids,
         ));
 
         return $this->database->measureExecutionTime(
             <<<SQL
-                insert into uuid (id)
+                insert into vb (id)
                 values {$values}
                 SQL,
         );
     }
 
-    public function measureSelectExecutionTime(array $uuids): TimePeriod
+    public function measureSelectExecutionTime(array $ids): TimePeriod
     {
         $inValue = implode(',', array_map(
-            static fn (string $uuid): string => "'{$uuid}'",
-            $uuids,
+            static fn (string $id): string => "'{$id}'",
+            $ids,
         ));
 
         return $this->database->measureExecutionTime(
             <<<SQL
-                select BIN_TO_UUID(id)
-                from uuid
+                select id
+                from vb
                 where id in ({$inValue})
                 SQL,
         );
@@ -57,6 +56,6 @@ final class MySQLUuidTable implements UuidTable
 
     public function measureIndexSize(): Memory
     {
-        return $this->database->measureIndexesSize('uuid');
+        return $this->database->measureIndexesSize('vb');
     }
 }

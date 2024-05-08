@@ -14,6 +14,8 @@ use VUdaltsov\UuidVsAutoIncrement\Database\Databases;
 use VUdaltsov\UuidVsAutoIncrement\Postgres\PostgresDatabase;
 use VUdaltsov\UuidVsAutoIncrement\MySQL\MySQLDatabase;
 use VUdaltsov\UuidVsAutoIncrement\UuidBenchmark\UuidBenchmark;
+use VUdaltsov\UuidVsAutoIncrement\VarBinaryBenchmark\VarBinaryBenchmark;
+use VUdaltsov\UuidVsAutoIncrement\VarCharBenchmark\VarCharBenchmark;
 use VUdaltsov\UuidVsAutoIncrement\Writer\Csv;
 use function Ramsey\Uuid\v1;
 use function Ramsey\Uuid\v4;
@@ -28,6 +30,8 @@ require_once __DIR__.'/vendor/autoload.php';
 $node = new Hexadecimal('0');
 $benchmarks = new Benchmarks([
     'auto_increment' => static fn (): AutoIncrementBenchmark => new AutoIncrementBenchmark(),
+    'varbinary' => static fn (): VarBinaryBenchmark => new VarBinaryBenchmark(),
+    'varchar' => static fn (): VarCharBenchmark => new VarCharBenchmark(),
     'uuid_v1' => static fn (): UuidBenchmark => new UuidBenchmark(
         static fn (): string => v1($node),
     ),
